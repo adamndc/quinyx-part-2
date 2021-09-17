@@ -41,14 +41,18 @@ while current < END_DATE:
 current_bucket = 0
 current_data_row = 0 
 
+#calculate results
 while current_bucket < len(new_data) and current_data_row < len(data):
+    #if next transaction in next time bucket, move to next bucket
     if new_data[current_bucket + 1][0] < data[current_data_row][0]:
         current_bucket += 1
+    #else log the transaction into the bucket
     else:
         new_data[current_bucket][1] += data[current_data_row][1]
         new_data[current_bucket][2] += 1
         current_data_row += 1    
 
+#write results from new_data into results.csv file
 with open('results.csv', 'w') as target:
     csv_writer = csv.writer(target)
     csv_writer.writerow(['Time', 'Sales', 'Transactions'])
