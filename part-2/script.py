@@ -1,8 +1,6 @@
 import csv
 import datetime
-from os import close
 from openpyxl import load_workbook
-from openpyxl.descriptors.base import DateTime #used instead of xlrd as it no longer supports .xlsx files
 
 #load in workbook
 workbook = load_workbook('sales data 2019 1-3.xlsx')
@@ -25,7 +23,7 @@ TIME_DELTA = datetime.timedelta(minutes=15)
 START_DATE = datetime.datetime.combine(data[1][0].date(), datetime.time(hour=10)) 
 END_DATE = datetime.datetime.combine(data[-1][0].date() + datetime.timedelta(days=1), datetime.time(0))
 
-
+#optimizing bucket generation
 CLOSED = datetime.time(hour=22, minute=30) #found through analysis in excel
 TO_OPEN = datetime.timedelta(hours=9, minutes=30) #found through analysis in excel
 
