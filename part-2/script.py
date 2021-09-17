@@ -1,5 +1,6 @@
 import csv
 import datetime
+from os import close
 from openpyxl import load_workbook
 from openpyxl.descriptors.base import DateTime #used instead of xlrd as it no longer supports .xlsx files
 
@@ -25,8 +26,13 @@ START_DATE = datetime.datetime.combine(data[1][0].date(), datetime.time(hour=10)
 END_DATE = datetime.datetime.combine(data[-1][0].date() + datetime.timedelta(days=1), datetime.time(0))
 
 
+CLOSED = datetime.time(hour=22, minute=30) #found through analysis in excel
+TO_OPEN = datetime.timedelta(hours=9, minutes=30) #found through analysis in excel
+
 current = START_DATE
 while current < END_DATE:
+    if current.time() >= CLOSED:
+        current = current + TO_OPEN
     to_add = []
     to_add.append(current)
     to_add.append(0)
@@ -38,7 +44,7 @@ current_bucket = 0
 current_data_row = 0 
 
 while current_bucket < len(new_data) and current_data_row < len(data):
-    if new_data[current_bucket][0] < data[current_data_row][0]:
+    if new_data[current_bucket + 1][0] < data[current_data_row][0]:
         current_bucket += 1
     else:
         new_data[current_bucket][1] += data[current_data_row][1]
